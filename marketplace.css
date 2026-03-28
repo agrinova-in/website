@@ -1,0 +1,322 @@
+/* --- Marketplace Auth & UI Overrides --- */
+.auth-body, .marketplace-body {
+    background-color: var(--clr-bg-alt);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-body {
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem;
+    position: relative;
+    z-index: 10;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--clr-green-nav);
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--clr-bg-main);
+    transition: var(--transition);
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--clr-orange-primary);
+    box-shadow: 0 0 0 3px rgba(243, 121, 32, 0.1);
+}
+
+.btn-full {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--clr-text-muted);
+}
+
+.auth-switch span {
+    color: var(--clr-orange-primary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.error-msg {
+    color: #e53e3e;
+    font-size: 0.9rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.back-home {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    font-weight: 500;
+    color: var(--clr-green-dark);
+}
+
+/* --- Marketplace Dashboard --- */
+.marketplace-main {
+    flex-grow: 1;
+    padding-top: calc(var(--nav-height) + 2rem);
+    padding-bottom: 4rem;
+}
+
+.m-section {
+    margin-bottom: 3rem;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.search-header {
+    border-bottom: none;
+    margin-bottom: 2rem;
+}
+
+.search-bar {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--clr-text-muted);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 14px 20px 14px 45px;
+    border-radius: 50px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-sm);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--clr-green-light);
+    box-shadow: var(--shadow-md);
+}
+
+/* Forms Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    background: var(--clr-white);
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Product Cards */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.p-card {
+    background: var(--clr-white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.p-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.p-img-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: var(--clr-bg-alt);
+    position: relative;
+}
+
+.p-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.p-card:hover .p-img {
+    transform: scale(1.05);
+}
+
+.p-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255,255,255,0.9);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--clr-green-dark);
+}
+
+.p-details {
+    padding: 1.5rem;
+}
+
+.p-name {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--clr-text-main);
+}
+
+.p-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.p-price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--clr-orange-primary);
+}
+
+.p-qty {
+    color: var(--clr-text-muted);
+    font-size: 0.9rem;
+}
+
+.p-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+}
+
+.p-meta div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* WhatsApp Button styling */
+.btn-whatsapp {
+    background-color: #25D366;
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-whatsapp:hover {
+    background-color: #20BD5A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
+
+.btn-danger {
+    background-color: #e53e3e;
+    color: white;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+.btn-danger:hover {
+    background-color: #c53030;
+}
+
+.status-msg {
+    text-align: center;
+    padding: 3rem;
+    color: var(--clr-text-muted);
+    font-size: 1.2rem;
+}
+
+/* User Profile Badge */
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--clr-bg-alt);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    color: var(--clr-green-nav);
+}
+
+.user-badge span {
+    font-size: 0.8rem;
+    background: var(--clr-orange-primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .search-bar {
+        max-width: 100%;
+    }
+}

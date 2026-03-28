@@ -1,0 +1,12 @@
+# Node Modules
+backend/node_modules/
+
+# Uploaded Files
+backend/uploads/
+
+# Optional: Ignore the database if you don't want your test users public
+# backend/database.sqlite
+
+# System Files
+.DS_Store
+Thumbs.db

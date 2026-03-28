@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNova - Farmer Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="marketplace.css">
+</head>
+<body class="marketplace-body" onload="initMarketplace()">
+    
+    <!-- Navbar -->
+    <header class="navbar" id="m-navbar">
+        <div class="container nav-content">
+             <div class="logo">
+                <a href="index.html" class="logo-link">
+                   <h2 class="logo-text">Agri<span class="highlight">Nova</span> | Marketplace</h2>
+                </a>
+            </div>
+            <nav class="nav-links" id="m-nav-links">
+                <!-- Injected via JS -->
+            </nav>
+            <div id="auth-buttons">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container marketplace-main">
+
+        <!-- Farmer Action Panel (Only visible to Farmers) -->
+        <section id="farmer-panel" class="m-section" style="display:none;">
+            <div class="panel-header">
+                <h3>My Farmer Dashboard</h3>
+                <button class="btn btn-primary" onclick="toggleAddProductForm()">+ Add New Crop Listing</button>
+            </div>
+            
+            <form id="add-product-form" class="glass-card form-grid" style="display:none;">
+                <div class="form-group">
+                    <label>Crop Name</label>
+                    <input type="text" id="p-name" required placeholder="e.g. Organic Wheat">
+                </div>
+                <div class="form-group">
+                    <label>Price (₹ / kg)</label>
+                    <input type="number" id="p-price" required placeholder="e.g. 25.50">
+                </div>
+                <div class="form-group">
+                    <label>Quantity Available (kg)</label>
+                    <input type="number" id="p-qty" required placeholder="e.g. 500">
+                </div>
+                <div class="form-group">
+                    <label>Farm Location</label>
+                    <input type="text" id="p-location" required placeholder="e.g. Punjab, India">
+                </div>
+                <div class="form-group full-width">
+                    <label>Upload Crop Image</label>
+                    <input type="file" id="p-image" required accept="image/*">
+                </div>
+                <div class="form-group full-width" style="display:flex; gap:10px;">
+                    <button type="submit" class="btn btn-primary">Publish Listing</button>
+                    <button type="button" class="btn btn-outline" onclick="toggleAddProductForm()">Cancel</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Product Market Section -->
+        <section id="market-panel" class="m-section">
+            <div class="panel-header search-header">
+                <h2>Browse Market</h2>
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Search by crop name or location..." oninput="searchProducts()">
+                </div>
+            </div>
+
+            <!-- Loader or Empty State -->
+            <div id="product-status" class="status-msg">Loading crops...</div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="products-grid">
+                <!-- Filled via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-bottom">
+            <p>&copy; 2026 AgriNova Farmer Marketplace. Removing Middlemen.</p>
+        </div>
+    </footer>
+
+    <script src="marketplace.js"></script>
+</body>
+</html>
