@@ -25,6 +25,9 @@ if (!fs.existsSync(uploadDir)) {
 // Serve uploaded images statically
 app.use('/uploads', express.static(uploadDir));
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Multer Storage Setup for Local Images
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
