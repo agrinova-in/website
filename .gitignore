@@ -10,3 +10,6 @@ backend/uploads/
 # System Files
 .DS_Store
 Thumbs.db
+
+# Security Keys
+backend/.env

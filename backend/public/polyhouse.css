@@ -1,0 +1,191 @@
+/* --- AgriNova Polyhouse Services CSS --- */
+
+.polyhouse-body {
+    background-color: var(--clr-bg-alt);
+    margin: 0;
+    padding-top: var(--nav-height);
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Hero Section */
+.polyhouse-hero {
+    background: linear-gradient(135deg, var(--clr-bg-alt) 0%, rgba(2, 108, 59, 0.05) 100%);
+    padding: 6rem 1rem 4rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.polyhouse-hero h1 {
+    font-size: 3rem;
+    color: var(--clr-text-main);
+    margin-bottom: 1rem;
+}
+
+.polyhouse-hero p {
+    color: var(--clr-text-muted);
+    font-size: 1.15rem;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+    line-height: 1.6;
+}
+
+.badge.highlight-bg {
+    background-color: rgba(243, 121, 32, 0.1);
+    color: var(--clr-orange-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.cta-btn {
+    box-shadow: 0 8px 20px rgba(243, 121, 32, 0.3);
+}
+
+/* Benefits Grid */
+.benefits-section {
+    padding: 5rem 1rem;
+}
+
+.benefits-section .section-title {
+    margin-bottom: 3rem;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.benefit-card {
+    background: var(--clr-white);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: var(--transition);
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.benefit-card .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+    color: var(--clr-green-nav);
+    margin-bottom: 1rem;
+}
+
+.benefit-card p {
+    color: var(--clr-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Pricing Grid */
+.packages-section {
+    background-color: var(--clr-white);
+    padding: 5rem 1rem;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pricing-card {
+    background: var(--clr-bg-alt);
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.pricing-card.highlight-card {
+    background: var(--clr-white);
+    border: 2px solid var(--clr-orange-primary);
+    box-shadow: var(--shadow-md);
+    transform: scale(1.03);
+    z-index: 2;
+}
+
+.popular-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--clr-orange-primary);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(243, 121, 32, 0.4);
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 1.5rem;
+}
+
+.card-header h3 {
+    color: var(--clr-text-main);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-header p {
+    color: var(--clr-orange-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.package-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+.package-features li {
+    margin-bottom: 1rem;
+    color: var(--clr-text-muted);
+    display: flex;
+    align-items: center;
+}
+
+.package-features .check {
+    color: var(--clr-green-main);
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/* Animations */
+.fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

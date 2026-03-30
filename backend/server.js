@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3');
@@ -7,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 const PORT = 5000;
@@ -197,6 +199,63 @@ app.delete('/api/products/:id', authenticateToken, async (req, res) => {
         res.json({ message: 'Product deleted.' });
     } catch (err) {
         res.status(500).json({ error: 'Server error.' });
+    }
+});
+
+// --- AI PLANT DISEASE PREDICTION ROUTE ---
+app.post('/api/predict-disease', upload.single('image'), async (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No image provided.' });
+
+    const mimeType = req.file.mimetype;
+    const imagePath = req.file.path;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    try {
+        // Option B: Real AI if API Key exists
+        if (apiKey) {
+            const genAI = new GoogleGenerativeAI(apiKey);
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            
+            const prompt = "Act as an expert agricultural botanist. Analyze this plant leaf image. Identify any disease, pest, or deficiency. If it is healthy, state 'Healthy'. Return ONLY a strictly valid JSON object with absolutely NO markdown wrapping or formatting. The JSON object must have exactly these keys: { \"diseaseName\": \"string\", \"confidence\": a float number between 0 and 1, \"treatment\": [\"array of string actionable advice points\"] }";
+            
+            const imageParts = [
+                {
+                    inlineData: {
+                        data: fs.readFileSync(imagePath).toString("base64"),
+                        mimeType
+                    }
+                }
+            ];
+
+            const result = await model.generateContent([prompt, ...imageParts]);
+            const responseText = result.response.text();
+            
+            // Extract JSON from potential markdown blocks if AI ignored instructions
+            let jsonStr = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const aiData = JSON.parse(jsonStr);
+            
+            return res.json(aiData);
+        } 
+        
+        // Option A: Simulated AI (Fallback if no API key is set)
+        console.log("⚠️ No GEMINI_API_KEY found in .env. Running Simulated AI Demo mode.");
+        setTimeout(() => {
+            const mockDiseases = [
+                { name: "Tomato Early Blight", confidence: 0.94, treatment: ["Remove affected leaves immediately", "Apply a copper-based fungicide", "Ensure proper spacing for air circulation"] },
+                { name: "Wheat Leaf Rust", confidence: 0.88, treatment: ["Use disease-resistant varieties next season", "Apply systemic fungicides within 7 days", "Monitor adjacent fields"] },
+                { name: "Healthy Plant", confidence: 0.99, treatment: ["Continue regular watering schedule", "Maintain current nutrient balance"] }
+            ];
+            const randomPick = mockDiseases[Math.floor(Math.random() * mockDiseases.length)];
+            res.json({
+                diseaseName: randomPick.name,
+                confidence: randomPick.confidence,
+                treatment: randomPick.treatment
+            });
+        }, 2500); // 2.5s simulated delay
+
+    } catch (err) {
+        console.error("AI Error:", err);
+        res.status(500).json({ error: 'Failed to analyze the image using AI.' });
     }
 });
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNova - AI Plant Disease Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="disease.css">
+</head>
+<body class="disease-body">
+    
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-content">
+             <div class="logo">
+                <a href="index.html" class="logo-link">
+                   <h2 class="logo-text">Agri<span class="highlight">Nova</span> | AI Vision</h2>
+                </a>
+            </div>
+            <a href="index.html" class="btn btn-primary">← Back Home</a>
+        </div>
+    </header>
+
+    <main class="container disease-main">
+        <div class="header-section text-center">
+            <h1>AI Plant Disease <span class="highlight-text">Detector</span></h1>
+            <p>Upload a clear photo of your sick plant or leaf. Our advanced AI will instantly analyze it, identify the issue, and provide actionable treatment recommendations to save your yield.</p>
+        </div>
+
+        <div class="disease-grid">
+            <!-- Upload Panel -->
+            <div class="upload-panel glass-card">
+                <div class="drag-area" id="drag-area">
+                    <div class="icon">📸</div>
+                    <h3>Drag & Drop to Upload</h3>
+                    <p>or click to browse from your device.</p>
+                    <input type="file" hidden id="file-input" accept="image/*">
+                </div>
+
+                <div class="preview-container" id="preview-container" style="display: none;">
+                    <img src="" alt="Uploaded Leaf" id="image-preview" class="image-preview">
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" id="btn-reupload">Select Another</button>
+                        <button class="btn btn-primary" id="btn-analyze">Analyze Leaf 🔬</button>
+                    </div>
+                </div>
+
+                <!-- AI Scanning Overlay -->
+                <div class="ai-scanning" id="ai-scanning" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Initiating Neural Network Scanning...</p>
+                    <p class="small-text">Analyzing leaf damage patterns...</p>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel glass-card" id="results-panel" style="display: none;">
+                <div class="result-header">
+                    <span class="badge success">Analysis Complete</span>
+                    <h2>Detection Results</h2>
+                </div>
+                
+                <div class="result-block">
+                    <h4>Identified Disease / Pest</h4>
+                    <p id="res-disease" class="disease-name">Detecting...</p>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="res-confidence" style="width: 0%;"></div>
+                    </div>
+                    <small>AI Confidence: <span id="res-confidence-text">--%</span></small>
+                </div>
+
+                <div class="result-block advice-block">
+                    <h4>🌿 Recommended Treatment & Actions</h4>
+                    <div id="res-treatment" class="treatment-content">
+                        <!-- AI Treatment points injected here -->
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-full" onclick="location.reload()">Detect Another Plant</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="disease.js"></script>
+</body>
+</html>
