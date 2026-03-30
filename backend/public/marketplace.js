@@ -18,48 +18,70 @@ function logout() {
 
 function updateNav() {
     const user = getUser();
-    const navLinks = document.getElementById('m-nav-links');
-    const authBtns = document.getElementById('auth-buttons');
+    const navActions = document.querySelector('.nav-actions');
     
-    if (!navLinks) return; // Not on marketplace page
+    if (!navActions) return; 
     
     if (user) {
-        navLinks.innerHTML = `
-            <div class="user-badge">
-                ${user.name} <span>${user.role}</span>
+        // Find existing nav-links or create a user info area
+        const userActions = document.createElement('div');
+        userActions.className = 'user-actions hide-mobile';
+        userActions.style.display = 'flex';
+        userActions.style.alignItems = 'center';
+        userActions.innerHTML = `
+            <div class="user-badge" style="margin-right: 1.2rem;">
+                <span class="user-name-label">${user.name}</span>
+                <span class="user-role-label">${user.role}</span>
             </div>
+            <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.9rem;" onclick="logout()">Logout</button>
         `;
-        authBtns.innerHTML = `<button class="btn btn-outline" onclick="logout()">Logout</button>`;
+        
+        // Remove the default "Get Started" login button
+        const loginBtn = navActions.querySelector('a[href="auth.html"]');
+        if (loginBtn) loginBtn.style.display = 'none';
+
+        // Add user actions if not already there
+        if (!navActions.querySelector('.user-actions')) {
+            navActions.prepend(userActions);
+        }
         
         // Show farmer dashboard if they are a farmer
         if (user.role === 'farmer') {
-            document.getElementById('farmer-panel').style.display = 'block';
+            const panel = document.getElementById('farmer-panel');
+            if (panel) panel.style.display = 'block';
         }
-    } else {
-        navLinks.innerHTML = ``;
-        authBtns.innerHTML = `
-            <a href="auth.html" class="btn btn-primary">Login / Signup</a>
-        `;
     }
 }
 
 /* --- AUTH PAGE LOGIC --- */
 function toggleAuth(type) {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const panel = document.querySelector('.auth-form-panel');
+
     if (type === 'register') {
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('register-form').style.display = 'block';
-        document.getElementById('auth-subtitle').innerText = 'Create a new account';
+        if (loginForm) loginForm.style.display = 'none';
+        if (registerForm) registerForm.style.display = 'flex';
+        if (tabLogin) tabLogin.classList.remove('active');
+        if (tabRegister) tabRegister.classList.add('active');
     } else {
-        document.getElementById('register-form').style.display = 'none';
-        document.getElementById('login-form').style.display = 'block';
-        document.getElementById('auth-subtitle').innerText = 'Login to access your account';
+        if (registerForm) registerForm.style.display = 'none';
+        if (loginForm) loginForm.style.display = 'flex';
+        if (tabRegister) tabRegister.classList.remove('active');
+        if (tabLogin) tabLogin.classList.add('active');
     }
+
+    // Always scroll back to top so tabs are never hidden
+    if (panel) panel.scrollTop = 0;
 }
 
+
 // Login Submit
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
+const loginFormEl = document.getElementById('login-form');
+if (loginFormEl) {
+    loginFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
@@ -92,9 +114,9 @@ if (loginForm) {
 }
 
 // Register Submit
-const registerForm = document.getElementById('register-form');
-if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
+const registerFormEl = document.getElementById('register-form');
+if (registerFormEl) {
+    registerFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
             name: document.getElementById('reg-name').value,
@@ -134,17 +156,33 @@ if (registerForm) {
 function initMarketplace() {
     updateNav();
     fetchProducts();
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
 }
 
-function toggleAddProductForm() {
-    const form = document.getElementById('add-product-form');
-    if (form.style.display === 'none') {
-        form.style.display = 'grid'; // because of form-grid class
-    } else {
-        form.style.display = 'none';
-        form.reset();
-    }
+function openModal() {
+    document.getElementById('crop-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden'; // prevent background scroll
 }
+
+function closeModal() {
+    const overlay = document.getElementById('crop-modal-overlay');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('add-product-form').reset();
+}
+
+// Close only if click is directly on the dark overlay, not the modal box
+function handleOverlayClick(e) {
+    if (e.target === document.getElementById('crop-modal-overlay')) closeModal();
+}
+
+// Keep backward-compat alias (used inline in old markup — no longer needed but safe)
+function toggleAddProductForm() { openModal(); }
+
 
 // Add Product Handle
 const addProductForm = document.getElementById('add-product-form');
@@ -175,8 +213,7 @@ if (addProductForm) {
             
             if (!res.ok) throw new Error(data.error || 'Failed to add product');
             
-            alert('Crop Listing Published!');
-            toggleAddProductForm();
+            closeModal();
             fetchProducts();
         } catch (error) {
             alert(error.message);
@@ -188,15 +225,31 @@ if (addProductForm) {
 }
 
 let allProducts = [];
+let _searchTimer = null;
+
+// Debounced search — waits 300ms after user stops typing before hitting the API
+function debouncedSearch() {
+    clearTimeout(_searchTimer);
+    _searchTimer = setTimeout(() => {
+        const query = document.getElementById('search-input').value;
+        fetchProducts(query);
+    }, 300);
+}
+
+// Keep alias for any other callers
+function searchProducts() {
+    const query = document.getElementById('search-input').value;
+    fetchProducts(query);
+}
 
 async function fetchProducts(query = '') {
     const statusDiv = document.getElementById('product-status');
     const grid = document.getElementById('products-grid');
     if (!statusDiv) return;
 
+    // Show a subtle loading state WITHOUT wiping the current grid
     statusDiv.style.display = 'block';
-    statusDiv.innerText = 'Loading crops...';
-    grid.innerHTML = '';
+    statusDiv.innerText = 'Searching...';
 
     try {
         const res = await fetch(`${API_URL}/products?q=${encodeURIComponent(query)}`);
@@ -205,6 +258,9 @@ async function fetchProducts(query = '') {
         if (!res.ok) throw new Error('Failed to load products');
         allProducts = products;
         
+        // Only now clear and re-render
+        grid.innerHTML = '';
+
         if (products.length === 0) {
             statusDiv.innerText = query ? 'No crops found matching your search.' : 'No crops available in the market right now.';
             return;
@@ -215,11 +271,6 @@ async function fetchProducts(query = '') {
     } catch (error) {
         statusDiv.innerText = 'Error loading products. Make sure the backend server is running.';
     }
-}
-
-function searchProducts() {
-    const query = document.getElementById('search-input').value;
-    fetchProducts(query);
 }
 
 function renderProducts(products) {
@@ -239,7 +290,7 @@ function renderProducts(products) {
         card.innerHTML = `
             <div class="p-img-container">
                 <span class="p-tag">${p.quantity} kg</span>
-                <img src="http://localhost:5000${p.image}" alt="${p.name}" class="p-img">
+                <img src="${p.image}" alt="${p.name}" class="p-img">
             </div>
             <div class="p-details">
                 <h3 class="p-name">${p.name}</h3>

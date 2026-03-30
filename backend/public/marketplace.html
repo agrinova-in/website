@@ -1,43 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriNova - Farmer Marketplace</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="marketplace.css">
+    <link rel="icon" type="image/png" href="logo.png">
 </head>
+
 <body class="marketplace-body" onload="initMarketplace()">
-    
+
     <!-- Navbar -->
-    <header class="navbar" id="m-navbar">
+    <header class="navbar" id="navbar">
         <div class="container nav-content">
-             <div class="logo">
+            <div class="logo">
                 <a href="index.html" class="logo-link">
-                   <h2 class="logo-text">Agri<span class="highlight">Nova</span> | Marketplace</h2>
+                    <h2 class="logo-text">Agri<span class="highlight">Nova</span></h2>
                 </a>
             </div>
-            <nav class="nav-links" id="m-nav-links">
-                <!-- Injected via JS -->
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="marketplace.html" class="active">Marketplace</a>
+                <a href="disease.html">AI Scanner</a>
+                <a href="recommend.html">Crop Suggestion</a>
+                <a href="polyhouse.html">Polyhouse</a>
+                <a href="index.html#about">About</a>
+                <!-- Mobile-only CTA -->
+                <a href="auth.html" class="btn btn-primary show-mobile">Get Started</a>
             </nav>
-            <div id="auth-buttons">
-                <!-- Injected via JS -->
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-primary hide-mobile">Get Started</a>
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="container marketplace-main">
-
-        <!-- Farmer Action Panel (Only visible to Farmers) -->
-        <section id="farmer-panel" class="m-section" style="display:none;">
-            <div class="panel-header">
-                <h3>My Farmer Dashboard</h3>
-                <button class="btn btn-primary" onclick="toggleAddProductForm()">+ Add New Crop Listing</button>
+    <!-- ============ ADD CROP MODAL ============ -->
+    <div class="modal-overlay" id="crop-modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal-box" id="crop-modal-box">
+            <div class="modal-header">
+                <h3>🌾 Add New Crop Listing</h3>
+                <button class="modal-close-btn" onclick="closeModal()" aria-label="Close">&times;</button>
             </div>
-            
-            <form id="add-product-form" class="glass-card form-grid" style="display:none;">
+            <form id="add-product-form" class="form-grid">
                 <div class="form-group">
                     <label>Crop Name</label>
                     <input type="text" id="p-name" required placeholder="e.g. Organic Wheat">
@@ -58,11 +72,23 @@
                     <label>Upload Crop Image</label>
                     <input type="file" id="p-image" required accept="image/*">
                 </div>
-                <div class="form-group full-width" style="display:flex; gap:10px;">
+                <div class="form-group full-width modal-actions">
                     <button type="submit" class="btn btn-primary">Publish Listing</button>
-                    <button type="button" class="btn btn-outline" onclick="toggleAddProductForm()">Cancel</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="container marketplace-main">
+
+        <!-- Farmer Action Panel (Only visible to Farmers) -->
+        <section id="farmer-panel" class="m-section" style="display:none;">
+            <div class="panel-header">
+                <h3>My Farmer Dashboard</h3>
+                <button class="btn btn-primary" onclick="openModal()">+ Add New Crop Listing</button>
+            </div>
         </section>
 
         <!-- Product Market Section -->
@@ -71,7 +97,8 @@
                 <h2>Browse Market</h2>
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="search-input" placeholder="Search by crop name or location..." oninput="searchProducts()">
+                    <input type="text" id="search-input" placeholder="Search by crop name or location..."
+                        oninput="debouncedSearch()">
                 </div>
             </div>
 
@@ -88,11 +115,30 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container footer-bottom">
-            <p>&copy; 2026 AgriNova Farmer Marketplace. Removing Middlemen.</p>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>Agri<span class="highlight">Nova</span></h3>
+                <p>Smart Fields, Better Yields.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="index.html#about">About</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>agrinova.in@gmail.com</p>
+                <p>+91 6261475021</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AgriNova Farmer Marketplace. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="script.js"></script>
     <script src="marketplace.js"></script>
 </body>
+
 </html>

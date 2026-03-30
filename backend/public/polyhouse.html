@@ -1,24 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriNova - Polyhouse Services</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="polyhouse.css">
+    <link rel="icon" type="image/png" href="logo.png">
 </head>
+
 <body class="polyhouse-body">
-    
+
     <!-- Navbar -->
     <header class="navbar" id="navbar">
         <div class="container nav-content">
-             <div class="logo">
+            <div class="logo">
                 <a href="index.html" class="logo-link">
-                   <h2 class="logo-text">Agri<span class="highlight">Nova</span> | Polyhouse</h2>
+                    <h2 class="logo-text">Agri<span class="highlight">Nova</span></h2>
                 </a>
             </div>
-            <a href="index.html" class="btn btn-outline">← Back to Services</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="disease.html">AI Scanner</a>
+                <a href="recommend.html">Crop Suggestion</a>
+                <a href="polyhouse.html" class="active">Polyhouse</a>
+                <a href="index.html#about">About</a>
+                <!-- Mobile-only CTA -->
+                <a href="auth.html" class="btn btn-primary show-mobile">Get Started</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-primary hide-mobile">Get Started</a>
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -27,8 +49,10 @@
         <div class="container hero-content text-center fade-in-up">
             <span class="badge highlight-bg">New Infrastructure Service</span>
             <h1>Future-Proof Your <span class="highlight-text">Farm</span></h1>
-            <p>Control the climate, block pests, and multiply your yields. We provide end-to-end Polyhouse construction, flexible rental options, and lifelong maintenance.</p>
-            <a href="https://wa.me/916261475021?text=Hi%20AgriNova,%20I'm%20interested%20in%20your%20Polyhouse%20Services!" target="_blank" class="btn btn-primary btn-large cta-btn">Consult an Expert on WhatsApp</a>
+            <p>Control the climate, block pests, and multiply your yields. We provide end-to-end Polyhouse construction,
+                flexible rental options, and lifelong maintenance.</p>
+            <a href="https://wa.me/916261475021?text=Hi%20AgriNova,%20I'm%20interested%20in%20your%20Polyhouse%20Services!"
+                target="_blank" class="btn btn-primary btn-large cta-btn">Consult an Expert on WhatsApp</a>
         </div>
     </section>
 
@@ -54,7 +78,9 @@
                         <li><span class="check">✓</span> Drip irrigation integration</li>
                         <li><span class="check">✓</span> Government subsidy assistance</li>
                     </ul>
-                    <a href="https://wa.me/916261475021?text=I%20want%20to%20build%20my%20own%20Polyhouse" target="_blank" class="btn btn-outline" style="width: 100%; text-align: center;">Get a Custom Quote</a>
+                    <a href="https://wa.me/916261475021?text=I%20want%20to%20build%20my%20own%20Polyhouse"
+                        target="_blank" class="btn btn-outline" style="width: 100%; text-align: center;">Get a Custom
+                        Quote</a>
                 </div>
 
                 <!-- Package 2 -->
@@ -70,7 +96,9 @@
                         <li><span class="check">✓</span> Minimum 6-month contracts</li>
                         <li><span class="check">✓</span> Upgrade or cancel anytime</li>
                     </ul>
-                    <a href="https://wa.me/916261475021?text=I%20am%20interested%20in%20Renting%20a%20Polyhouse" target="_blank" class="btn btn-primary" style="width: 100%; text-align: center;">Check Rental Availability</a>
+                    <a href="https://wa.me/916261475021?text=I%20am%20interested%20in%20Renting%20a%20Polyhouse"
+                        target="_blank" class="btn btn-primary" style="width: 100%; text-align: center;">Check Rental
+                        Availability</a>
                 </div>
 
                 <!-- Package 3 -->
@@ -85,7 +113,9 @@
                         <li><span class="check">✓</span> Soil & nutrient balancing</li>
                         <li><span class="check">✓</span> Emergency damage response</li>
                     </ul>
-                    <a href="https://wa.me/916261475021?text=I%20need%20maintenance%20for%20my%20existing%20Polyhouse" target="_blank" class="btn btn-outline" style="width: 100%; text-align: center;">Request Service</a>
+                    <a href="https://wa.me/916261475021?text=I%20need%20maintenance%20for%20my%20existing%20Polyhouse"
+                        target="_blank" class="btn btn-outline" style="width: 100%; text-align: center;">Request
+                        Service</a>
                 </div>
             </div>
         </div>
@@ -93,10 +123,29 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container text-center">
-            <p>&copy; 2026 AgriNova Polyhouse Solutions. Call/WhatsApp: +91 6261475021</p>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>Agri<span class="highlight">Nova</span></h3>
+                <p>Smart Fields, Better Yields.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="index.html#about">About</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>agrinova.in@gmail.com</p>
+                <p>+91 6261475021</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AgriNova Polyhouse Solutions. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="script.js"></script>
 </body>
+
 </html>

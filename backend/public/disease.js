@@ -15,7 +15,7 @@ dragArea.addEventListener('click', () => {
     fileInput.click();
 });
 
-fileInput.addEventListener('change', function() {
+fileInput.addEventListener('change', function () {
     file = this.files[0];
     showPreview(file);
 });
@@ -38,17 +38,17 @@ dragArea.addEventListener('drop', (event) => {
     event.preventDefault();
     dragArea.classList.remove('active');
     dragArea.querySelector('h3').textContent = "Drag & Drop to Upload";
-    
+
     file = event.dataTransfer.files[0];
     showPreview(file);
 });
 
 function showPreview(file) {
     if (!file) return;
-    
+
     let fileType = file.type;
     let validExtensions = ["image/jpeg", "image/jpg", "image/png"];
-    
+
     if (validExtensions.includes(fileType)) {
         uploadedFile = file;
         let fileReader = new FileReader(); // reading the file object
@@ -118,13 +118,13 @@ function displayResults(data) {
     // Reveal second column in grid
     gridContainer.classList.add('active-result');
     resultsPanel.style.display = 'flex';
-    
+
     // Inject Data
     document.getElementById('res-disease').textContent = data.diseaseName;
-    
+
     const confidencePercent = Math.round(data.confidence * 100);
     document.getElementById('res-confidence-text').textContent = confidencePercent + "%";
-    
+
     // Animate width
     setTimeout(() => {
         document.getElementById('res-confidence').style.width = confidencePercent + "%";

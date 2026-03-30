@@ -42,6 +42,10 @@
 
 .cta-btn {
     box-shadow: 0 8px 20px rgba(243, 121, 32, 0.3);
+    padding: 0.8rem 1.6rem;
+    font-size: 1.05rem;
+    width: auto;
+    display: inline-block;
 }
 
 /* Benefits Grid */
@@ -174,7 +178,7 @@
 }
 
 .package-features .check {
-    color: var(--clr-green-main);
+    color: var(--clr-green-dark);
     font-weight: bold;
     margin-right: 10px;
     flex-shrink: 0;

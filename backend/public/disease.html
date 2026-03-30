@@ -1,31 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriNova - AI Plant Disease Detection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="disease.css">
+    <link rel="icon" type="image/png" href="logo.png">
 </head>
+
 <body class="disease-body">
-    
+
     <!-- Navbar -->
     <header class="navbar" id="navbar">
         <div class="container nav-content">
-             <div class="logo">
+            <div class="logo">
                 <a href="index.html" class="logo-link">
-                   <h2 class="logo-text">Agri<span class="highlight">Nova</span> | AI Vision</h2>
+                    <h2 class="logo-text">Agri<span class="highlight">Nova</span></h2>
                 </a>
             </div>
-            <a href="index.html" class="btn btn-primary">← Back Home</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="disease.html" class="active">AI Scanner</a>
+                <a href="recommend.html">Crop Suggestion</a>
+                <a href="polyhouse.html">Polyhouse</a>
+                <a href="index.html#about">About</a>
+                <!-- Mobile-only CTA -->
+                <a href="auth.html" class="btn btn-primary show-mobile">Get Started</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-primary hide-mobile">Get Started</a>
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </header>
 
     <main class="container disease-main">
         <div class="header-section text-center">
             <h1>AI Plant Disease <span class="highlight-text">Detector</span></h1>
-            <p>Upload a clear photo of your sick plant or leaf. Our advanced AI will instantly analyze it, identify the issue, and provide actionable treatment recommendations to save your yield.</p>
+            <p>Upload a clear photo of your sick plant or leaf. Our advanced AI will instantly analyze it, identify the
+                issue, and provide actionable treatment recommendations to save your yield.</p>
         </div>
 
         <div class="disease-grid">
@@ -40,7 +63,7 @@
 
                 <div class="preview-container" id="preview-container" style="display: none;">
                     <img src="" alt="Uploaded Leaf" id="image-preview" class="image-preview">
-                    
+
                     <div class="action-buttons">
                         <button class="btn btn-outline" id="btn-reupload">Select Another</button>
                         <button class="btn btn-primary" id="btn-analyze">Analyze Leaf 🔬</button>
@@ -61,7 +84,7 @@
                     <span class="badge success">Analysis Complete</span>
                     <h2>Detection Results</h2>
                 </div>
-                
+
                 <div class="result-block">
                     <h4>Identified Disease / Pest</h4>
                     <p id="res-disease" class="disease-name">Detecting...</p>
@@ -83,6 +106,32 @@
         </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>Agri<span class="highlight">Nova</span></h3>
+                <p>Smart Fields, Better Yields.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="index.html#about">About</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>agrinova.in@gmail.com</p>
+                <p>+91 6261475021</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AgriNova AI Vision. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
     <script src="disease.js"></script>
 </body>
+
 </html>

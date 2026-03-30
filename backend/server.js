@@ -79,7 +79,7 @@ let db;
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    
+
     if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
@@ -214,10 +214,10 @@ app.post('/api/predict-disease', upload.single('image'), async (req, res) => {
         // Option B: Real AI if API Key exists
         if (apiKey) {
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            
+            const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
             const prompt = "Act as an expert agricultural botanist. Analyze this plant leaf image. Identify any disease, pest, or deficiency. If it is healthy, state 'Healthy'. Return ONLY a strictly valid JSON object with absolutely NO markdown wrapping or formatting. The JSON object must have exactly these keys: { \"diseaseName\": \"string\", \"confidence\": a float number between 0 and 1, \"treatment\": [\"array of string actionable advice points\"] }";
-            
+
             const imageParts = [
                 {
                     inlineData: {
@@ -229,14 +229,14 @@ app.post('/api/predict-disease', upload.single('image'), async (req, res) => {
 
             const result = await model.generateContent([prompt, ...imageParts]);
             const responseText = result.response.text();
-            
+
             // Extract JSON from potential markdown blocks if AI ignored instructions
             let jsonStr = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
             const aiData = JSON.parse(jsonStr);
-            
+
             return res.json(aiData);
-        } 
-        
+        }
+
         // Option A: Simulated AI (Fallback if no API key is set)
         console.log("⚠️ No GEMINI_API_KEY found in .env. Running Simulated AI Demo mode.");
         setTimeout(() => {
@@ -256,6 +256,86 @@ app.post('/api/predict-disease', upload.single('image'), async (req, res) => {
     } catch (err) {
         console.error("AI Error:", err);
         res.status(500).json({ error: 'Failed to analyze the image using AI.' });
+    }
+});
+
+// --- SMART CROP RECOMMENDATION ROUTE ---
+app.post('/api/recommend-crops', async (req, res) => {
+    const { n, p, k, ph, temp, humidity, rainfall } = req.body;
+
+    // Basic validation
+    if (n === undefined || p === undefined || k === undefined || ph === undefined) {
+        return res.status(400).json({ error: 'Soil parameters (N, P, K, pH) are required.' });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    try {
+        if (apiKey) {
+            const genAI = new GoogleGenerativeAI(apiKey);
+            const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+            const prompt = `Act as an expert agronomist advisor. Based on the following soil and environmental data:
+            - Nitrogen (N): ${n}
+            - Phosphorus (P): ${p}
+            - Potassium (K): ${k}
+            - Soil pH: ${ph}
+            - Temperature: ${temp || 'Average'} °C
+            - Humidity: ${humidity || 'Average'} %
+            - Rainfall: ${rainfall || 'Average'} mm
+
+            Recommend the top 3 most suitable crops for these conditions. 
+            Return ONLY a strictly valid JSON object with absolutely NO markdown wrapping.
+            The JSON must follow this exact structure:
+            {
+              "recommendations": [
+                {
+                  "cropName": "string",
+                  "suitabilityScore": number (0-100),
+                  "reasoning": "string (brief but expert)",
+                  "growthTips": ["string advice 1", "string advice 2"]
+                }
+              ]
+            }`;
+
+            const result = await model.generateContent(prompt);
+            const responseText = result.response.text();
+
+            let jsonStr = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const aiData = JSON.parse(jsonStr);
+            return res.json(aiData);
+        }
+
+        // Option A: Simulated AI Fallback
+        console.log("⚠️ No GEMINI_API_KEY found. Running Crop Recommendation in Demo mode.");
+        setTimeout(() => {
+            res.json({
+                recommendations: [
+                    {
+                        cropName: "Maize (Corn)",
+                        suitabilityScore: 92,
+                        reasoning: "The soil has high nitrogen content and ideal pH for cereal crops.",
+                        growthTips: ["Ensure consistent irrigation during the silking stage", "Monitor for corn borers"]
+                    },
+                    {
+                        cropName: "Soybeans",
+                        suitabilityScore: 85,
+                        reasoning: "Phosphorus levels are optimal for nitrogen-fixing legumes.",
+                        growthTips: ["Inoculate seeds with Rhizobium", "Maintain weed control early on"]
+                    },
+                    {
+                        cropName: "Cotton",
+                        suitabilityScore: 78,
+                        reasoning: "Potassium levels and rainfall patterns suggest moderate success for fiber crops.",
+                        growthTips: ["Apply boron if deficiency is noted", "Manage plant height with regulators"]
+                    }
+                ]
+            });
+        }, 2000);
+
+    } catch (err) {
+        console.error("Crop Recommendation Error:", err);
+        res.status(500).json({ error: 'Failed to process crop recommendations.' });
     }
 });
 

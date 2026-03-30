@@ -29,22 +29,35 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    max-width: 600px;
-    margin: 0 auto;
 }
 
 @media (min-width: 900px) {
     .disease-grid.active-result {
         grid-template-columns: 1fr 1fr;
-        max-width: 1000px;
     }
+}
+
+/* ---- Override hero .glass-card positioning for disease panels ---- */
+.upload-panel,
+.results-panel {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    animation: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: block;
+    gap: unset;
+    align-items: unset;
 }
 
 /* Upload Panel */
 .upload-panel {
     padding: 2rem;
     text-align: center;
-    position: relative;
     overflow: hidden;
 }
 
@@ -57,7 +70,8 @@
     background-color: var(--clr-bg-main);
 }
 
-.drag-area:hover, .drag-area.active {
+.drag-area:hover,
+.drag-area.active {
     border-color: var(--clr-orange-primary);
     background-color: rgba(243, 121, 32, 0.05);
 }
@@ -100,30 +114,30 @@
 /* AI Scanning Overlay */
 .ai-scanning {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.9);
+    inset: 0;
+    background: rgba(255, 255, 255, 0.92);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 10;
+    border-radius: 20px;
 }
 
 .spinner {
     width: 60px;
     height: 60px;
     border: 5px solid rgba(2, 108, 59, 0.2);
-    border-top-color: var(--clr-green-main);
+    border-top-color: var(--clr-green-dark);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
 }
 
 @keyframes spin {
-    100% { transform: rotate(360deg); }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .ai-scanning p {
@@ -140,27 +154,34 @@
 }
 
 @keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
 }
 
 /* Results Panel */
 .results-panel {
     padding: 2.5rem;
-    background: var(--clr-white);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
 .result-header {
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding-bottom: 1rem;
 }
 
 .badge.success {
-    background-color: var(--clr-green-main);
+    background-color: var(--clr-green-dark);
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
@@ -195,7 +216,7 @@
 .confidence-bar {
     width: 100%;
     height: 8px;
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     margin-bottom: 0.5rem;
     overflow: hidden;
@@ -213,7 +234,7 @@
     font-weight: 500;
 }
 
-/* Advice Block styling */
+/* Advice Block */
 .advice-block {
     background: rgba(243, 121, 32, 0.05);
     border-left: 4px solid var(--clr-orange-primary);
@@ -237,4 +258,23 @@
 .btn-full {
     width: 100%;
     margin-top: 1rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    .header-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .drag-area {
+        padding: 2rem 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .results-panel {
+        padding: 1.5rem;
+    }
 }
