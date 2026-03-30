@@ -515,6 +515,10 @@
     font-weight: 700;
     color: var(--clr-green-nav);
     font-size: 0.9rem;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user-role-label {

@@ -1,78 +1,81 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { neon } = require('@neondatabase/serverless');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const path = require('path');
 
 const app = express();
-const PORT = 5000;
-const JWT_SECRET = 'super-secret-key-agrinova';
+const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-agrinova';
 
-// Middleware
+// --- Database & Storage Initialization ---
+
+// Neon Postgres Client
+const sql = neon(process.env.DATABASE_URL);
+
+// Cloudinary Configuration (Uses CLOUDINARY_URL from .env)
+cloudinary.config({ secure: true });
+
+// Multer Storage for Marketplace (Persistent Cloudinary Storage)
+const productStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'agrinova/products',
+        allowed_formats: ['jpg', 'png', 'jpeg'],
+        transformation: [{ width: 800, height: 600, crop: 'limit' }],
+        use_filename: true,
+        unique_filename: true,
+    },
+});
+
+// Multer Storage for AI Scanner (Stateless Memory Storage)
+const memoryStorage = multer.memoryStorage();
+
+const upload = multer({ storage: productStorage });
+const scannerUpload = multer({ storage: memoryStorage });
+
+// --- Middleware ---
 app.use(cors());
 app.use(express.json());
-
-// Create uploads directory if it doesn't exist
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
-
-// Serve uploaded images statically
-app.use('/uploads', express.static(uploadDir));
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Multer Storage Setup for Local Images
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-const upload = multer({ storage: storage });
-
-// Database initialization
-let db;
+// Database Schema Initialization (Postgres)
 (async () => {
-    db = await open({
-        filename: path.join(__dirname, 'database.sqlite'),
-        driver: sqlite3.Database
-    });
-
-    // Create Tables
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            role TEXT NOT NULL CHECK(role IN ('farmer', 'buyer')),
-            phone TEXT NOT NULL
-        );
-        
-        CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            price REAL NOT NULL,
-            quantity TEXT NOT NULL,
-            location TEXT NOT NULL,
-            image TEXT NOT NULL,
-            farmer_id INTEGER NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY(farmer_id) REFERENCES users(id)
-        );
-    `);
-    console.log("SQLite Database initialized.");
+    try {
+        await sql`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                role TEXT NOT NULL CHECK(role IN ('farmer', 'buyer')),
+                phone TEXT NOT NULL
+            );
+        `;
+        await sql`
+            CREATE TABLE IF NOT EXISTS products (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                price DECIMAL(10,2) NOT NULL,
+                quantity TEXT NOT NULL,
+                location TEXT NOT NULL,
+                image TEXT NOT NULL,
+                farmer_id INTEGER NOT NULL REFERENCES users(id),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `;
+        console.log("Neon Postgres Database initialized.");
+    } catch (err) {
+        console.error("Database initialization error:", err);
+    }
 })();
 
 // JWT Verification Middleware
@@ -100,15 +103,16 @@ app.post('/api/auth/register', async (req, res) => {
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await db.run(
-            `INSERT INTO users (name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)`,
-            [name, email, hashedPassword, role, phone]
-        );
+        await sql`
+            INSERT INTO users (name, email, password, role, phone) 
+            VALUES (${name}, ${email}, ${hashedPassword}, ${role}, ${phone})
+        `;
         res.status(201).json({ message: 'User registered successfully!' });
     } catch (err) {
-        if (err.message.includes('UNIQUE constraint failed')) {
+        if (err.message && err.message.includes('unique constraint')) {
             return res.status(400).json({ error: 'Email already exists.' });
         }
+        console.error("Registration error:", err);
         res.status(500).json({ error: 'Server error during registration.' });
     }
 });
@@ -118,15 +122,24 @@ app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
+        const rows = await sql`SELECT * FROM users WHERE email = ${email}`;
+        const user = rows[0];
+
         if (!user) return res.status(400).json({ error: 'Invalid email or password.' });
 
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) return res.status(400).json({ error: 'Invalid email or password.' });
 
-        const token = jwt.sign({ id: user.id, role: user.role, name: user.name, phone: user.phone }, JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({
+            id: user.id,
+            role: user.role,
+            name: user.name,
+            phone: user.phone
+        }, JWT_SECRET, { expiresIn: '24h' });
+
         res.json({ token, user: { id: user.id, name: user.name, role: user.role, email: user.email } });
     } catch (err) {
+        console.error("Login error:", err);
         res.status(500).json({ error: 'Server error during login.' });
     }
 });
@@ -140,19 +153,20 @@ app.post('/api/products', authenticateToken, upload.single('image'), async (req,
     }
 
     const { name, price, quantity, location } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const image = req.file ? req.file.path : null; // Cloudinary URL
 
     if (!name || !price || !quantity || !location || !image) {
         return res.status(400).json({ error: 'All fields including an image are required.' });
     }
 
     try {
-        const result = await db.run(
-            `INSERT INTO products (name, price, quantity, location, image, farmer_id) VALUES (?, ?, ?, ?, ?, ?)`,
-            [name, price, quantity, location, image, req.user.id]
-        );
-        res.status(201).json({ message: 'Product added successfully!', id: result.lastID });
+        await sql`
+            INSERT INTO products (name, price, quantity, location, image, farmer_id) 
+            VALUES (${name}, ${price}, ${quantity}, ${location}, ${image}, ${req.user.id})
+        `;
+        res.status(201).json({ message: 'Product added successfully!' });
     } catch (err) {
+        console.error("Add product error:", err);
         res.status(500).json({ error: 'Server error while adding product.' });
     }
 });
@@ -160,18 +174,19 @@ app.post('/api/products', authenticateToken, upload.single('image'), async (req,
 // Get All Products (For Buyers/Browsing)
 app.get('/api/products', async (req, res) => {
     try {
-        // We do a JOIN to get the farmer's name and phone number for WhatsApp contact
         const q = req.query.q || '';
-        let query = `
-            SELECT p.*, u.name as farmer_name, u.phone as farmer_phone 
+        const searchPattern = `%${q}%`;
+
+        const products = await sql`
+            SELECT p.id, p.name, p.price::float as price, p.quantity, p.location, p.image, p.farmer_id, p.created_at, u.name as farmer_name, u.phone as farmer_phone 
             FROM products p 
             JOIN users u ON p.farmer_id = u.id 
-            WHERE p.name LIKE ? OR p.location LIKE ?
+            WHERE p.name ILIKE ${searchPattern} OR p.location ILIKE ${searchPattern}
             ORDER BY p.created_at DESC
         `;
-        const products = await db.all(query, [`%${q}%`, `%${q}%`]);
         res.json(products);
     } catch (err) {
+        console.error("Fetch products error:", err);
         res.status(500).json({ error: 'Server error while fetching products.' });
     }
 });
@@ -181,9 +196,10 @@ app.get('/api/products/me', authenticateToken, async (req, res) => {
     if (req.user.role !== 'farmer') return res.status(403).json({ error: 'Unauthorized.' });
 
     try {
-        const products = await db.all(`SELECT * FROM products WHERE farmer_id = ? ORDER BY created_at DESC`, [req.user.id]);
+        const products = await sql`SELECT id, name, price::float as price, quantity, location, image, farmer_id, created_at FROM products WHERE farmer_id = ${req.user.id} ORDER BY created_at DESC`;
         res.json(products);
     } catch (err) {
+        console.error("Fetch my products error:", err);
         res.status(500).json({ error: 'Server error.' });
     }
 });
@@ -193,51 +209,49 @@ app.delete('/api/products/:id', authenticateToken, async (req, res) => {
     if (req.user.role !== 'farmer') return res.status(403).json({ error: 'Unauthorized.' });
 
     try {
-        // Prevent deleting someone else's product
-        const result = await db.run(`DELETE FROM products WHERE id = ? AND farmer_id = ?`, [req.params.id, req.user.id]);
-        if (result.changes === 0) return res.status(404).json({ error: 'Product not found or unauthorized.' });
+        const result = await sql`
+            DELETE FROM products 
+            WHERE id = ${req.params.id} AND farmer_id = ${req.user.id} 
+            RETURNING id
+        `;
+        if (result.length === 0) return res.status(404).json({ error: 'Product not found or unauthorized.' });
         res.json({ message: 'Product deleted.' });
     } catch (err) {
+        console.error("Delete product error:", err);
         res.status(500).json({ error: 'Server error.' });
     }
 });
 
-// --- AI PLANT DISEASE PREDICTION ROUTE ---
-app.post('/api/predict-disease', upload.single('image'), async (req, res) => {
+// --- AI PLANT DISEASE PREDICTION ROUTE (Stateless) ---
+app.post('/api/predict-disease', scannerUpload.single('image'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No image provided.' });
 
-    const mimeType = req.file.mimetype;
-    const imagePath = req.file.path;
     const apiKey = process.env.GEMINI_API_KEY;
 
     try {
-        // Option B: Real AI if API Key exists
         if (apiKey) {
             const genAI = new GoogleGenerativeAI(apiKey);
             const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
             const prompt = "Act as an expert agricultural botanist. Analyze this plant leaf image. Identify any disease, pest, or deficiency. If it is healthy, state 'Healthy'. Return ONLY a strictly valid JSON object with absolutely NO markdown wrapping or formatting. The JSON object must have exactly these keys: { \"diseaseName\": \"string\", \"confidence\": a float number between 0 and 1, \"treatment\": [\"array of string actionable advice points\"] }";
 
-            const imageParts = [
-                {
-                    inlineData: {
-                        data: fs.readFileSync(imagePath).toString("base64"),
-                        mimeType
-                    }
+            const imagePart = {
+                inlineData: {
+                    data: req.file.buffer.toString("base64"),
+                    mimeType: req.file.mimetype
                 }
-            ];
+            };
 
-            const result = await model.generateContent([prompt, ...imageParts]);
+            const result = await model.generateContent([prompt, imagePart]);
             const responseText = result.response.text();
 
-            // Extract JSON from potential markdown blocks if AI ignored instructions
             let jsonStr = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
             const aiData = JSON.parse(jsonStr);
 
             return res.json(aiData);
         }
 
-        // Option A: Simulated AI (Fallback if no API key is set)
+        // Fallback for Demo Mode
         console.log("⚠️ No GEMINI_API_KEY found in .env. Running Simulated AI Demo mode.");
         setTimeout(() => {
             const mockDiseases = [
@@ -254,7 +268,7 @@ app.post('/api/predict-disease', upload.single('image'), async (req, res) => {
         }, 2500); // 2.5s simulated delay
 
     } catch (err) {
-        console.error("AI Error:", err);
+        console.error("AI Prediction Error:", err);
         res.status(500).json({ error: 'Failed to analyze the image using AI.' });
     }
 });

@@ -29,11 +29,11 @@ function updateNav() {
         userActions.style.display = 'flex';
         userActions.style.alignItems = 'center';
         userActions.innerHTML = `
-            <div class="user-badge" style="margin-right: 1.2rem;">
-                <span class="user-name-label">${user.name}</span>
+            <div class="user-badge" style="margin-right: 1.2rem; max-width: 180px;">
+                <span class="user-name-label" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.name}</span>
                 <span class="user-role-label">${user.role}</span>
             </div>
-            <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.9rem;" onclick="logout()">Logout</button>
+            <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.9rem; flex-shrink: 0;" onclick="logout()">Logout</button>
         `;
         
         // Remove the default "Get Started" login button
