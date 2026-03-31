@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNova - Smart Drone & Equipment Rentals</title>
+    <meta name="description"
+        content="Book smart drones for pesticide and fertilizer spraying. Flexible rates and smart recommendations for efficient farming.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="rental.css">
+    <link rel="icon" type="image/png" href="logo.png">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-content">
+            <div class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="logo.png" alt="AgriNova Logo">
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="rental.html" class="active">Rentals</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="disease.html">AI Scanner</a>
+                <a href="recommend.html">Crop Suggestion</a>
+                <a href="polyhouse.html">Polyhouse</a>
+                <a href="index.html#about">About</a>
+                <a href="auth.html" class="btn btn-primary show-mobile">Get Started</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-primary hide-mobile">Get Started</a>
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Rental Hero -->
+    <section class="rental-hero">
+        <div class="container">
+            <div class="rental-hero-content fade-in-up">
+                <h1>Smart Drones <span class="highlight-text">&</span> Precision Spraying</h1>
+                <p>Book high-tech aerial spraying services for fertilizers and pesticides. Save time, reduce costs, and
+                    maximize your yield without heavy investments.</p>
+            </div>
+        </div>
+        <div class="hero-bg-overlay"></div>
+    </section>
+
+    <!-- Booking Platform Section -->
+    <section class="booking-section section">
+        <div class="container booking-container">
+
+            <!-- Left Side: Booking Wizard -->
+            <div class="booking-wizard glass-card-alt slide-up">
+                <h2 class="form-title">Book a Service</h2>
+                <p class="form-subtitle">Fill in your details to get an instant estimate and book via WhatsApp.</p>
+
+                <form id="rental-booking-form" class="rental-form">
+
+                    <div class="form-group">
+                        <label for="b-service">Select Service *</label>
+                        <select id="b-service" required>
+                            <option value="" disabled selected>Choose a service...</option>
+                            <option value="Pesticide Drone Spraying">Pesticide Drone Spraying</option>
+                            <option value="Fertilizer Drone Spraying">Fertilizer Drone Spraying</option>
+                            <option value="Smart Irrigation Setup Setup">Smart Irrigation Setup & Sensors</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="b-size">Field Size (Acres) *</label>
+                            <input type="number" id="b-size" min="0.5" step="0.5" placeholder="e.g. 5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="b-pricing-model">Preferred Pricing *</label>
+                            <select id="b-pricing-model" required>
+                                <option value="Per Acre (₹500/Acre)">Per Acre (₹500/Acre)</option>
+                                <option value="Hourly (₹300/Hour)">Hourly (₹300/Hour)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="b-crop">Crop Type *</label>
+                            <input type="text" id="b-crop" placeholder="e.g. Wheat, Cotton" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="b-date">Preferred Date *</label>
+                            <input type="date" id="b-date" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="b-location">Full Farm Address / Location *</label>
+                        <textarea id="b-location" rows="3" placeholder="Enter village, district, landmark..."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="b-notes">Additional Notes for Pilot (Optional)</label>
+                        <textarea id="b-notes" rows="2" placeholder="Any specific instructions?"></textarea>
+                    </div>
+
+                    <div class="cost-estimator">
+                        <h3>Estimated Total: <span id="est-price" class="highlight">₹0</span></h3>
+                        <p>Final price will be confirmed by our team on WhatsApp.</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-whatsapp-large" id="btn-book">
+                        Book via WhatsApp
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Side: Info & Pricing -->
+            <div class="booking-info slide-up" style="animation-delay: 0.2s;">
+
+                <!-- Pricing Cards -->
+                <div class="info-block">
+                    <h3>Flexible Pricing</h3>
+                    <p>Access advanced agricultural tech without the heavy upfront costs.</p>
+                    <div class="pricing-cards">
+                        <div class="p-card-mini">
+                            <div class="p-icon">⏱️</div>
+                            <h4>Hourly Rate</h4>
+                            <div class="p-cost">₹300<span class="p-unit">/hour</span></div>
+                            <p class="p-desc">Best for specific patches or smaller trial areas.</p>
+                        </div>
+                        <div class="p-card-mini">
+                            <div class="p-icon">🌾</div>
+                            <h4>Per Acre</h4>
+                            <div class="p-cost">₹500<span class="p-unit">/acre</span></div>
+                            <p class="p-desc">Ideal for total field coverage.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Advisory Widget -->
+                <div class="smart-advisory-widget">
+                    <div class="widget-header">
+                        <h4>Smart Weather Advisory</h4>
+                    </div>
+                    <div class="widget-body">
+                        <p class="advisory-text">When you book, our system analyzes weather patterns (wind speed, rain
+                            forecast) to suggest the absolute best time for spraying to ensure maximum chemical efficacy
+                            and minimal drift.</p>
+                        <ul class="benefit-list">
+                            <li><span class="check">✓</span> 30% chemical saving</li>
+                            <li><span class="check">✓</span> Less environmental drift</li>
+                            <li><span class="check">✓</span> Real-time pilot tracking</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Subscription Box -->
+                <div class="subscription-box">
+                    <h4>AgriNova Frequent Flyer</h4>
+                    <p>Need regular spraying throughout the season? Subscribe for our seasonal package and get
+                        <strong>up to 20% off</strong> all drone bookings.
+                    </p>
+                    <a href="https://wa.me/916261475021?text=Hi%20AgriNova,%20I'm%20interested%20in%20the%20Seasonal%20Drone%20Subscription!"
+                        target="_blank" class="text-link">Ask about Subscriptions →</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>Agri<span class="highlight">Nova</span></h3>
+                <p>Smart Fields, Better Yields.</p>
+                <div class="social-links" style="margin-top: 1rem;">
+                    <a href="https://www.instagram.com/agrinova__" target="_blank" aria-label="Instagram"
+                        style="color: var(--clr-white); transition: color 0.3s; display: inline-block;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                            class="bi bi-instagram" viewBox="0 0 16 16">
+                            <path
+                                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="team.html">Our Team</a>
+                <a href="index.html#about">About</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>agrinova.in@gmail.com</p>
+                <p>+91 6261475021</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AgriNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="rental.js"></script>
+</body>
+
+</html>

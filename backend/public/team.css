@@ -1,0 +1,146 @@
+/* --- Team Page Specific Styles --- */
+
+.team-hero {
+    position: relative;
+    padding: 120px 0 80px 0;
+    background: linear-gradient(135deg, var(--clr-bg-alt) 0%, var(--clr-white) 100%);
+    text-align: center;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.team-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--clr-green-nav);
+}
+
+.team-hero p {
+    font-size: 1.2rem;
+    color: var(--clr-text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.team-section {
+    padding: 5rem 0;
+    background: var(--clr-bg-alt);
+    min-height: 60vh;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Business Card Style Layout */
+.team-card {
+    background: var(--clr-white);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle corner accent on hover */
+.team-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(243, 121, 32, 0.1) 50%);
+    transition: var(--transition);
+    opacity: 0;
+}
+
+.team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(243, 121, 32, 0.3);
+}
+
+.team-card:hover::before {
+    opacity: 1;
+}
+
+.t-card-body {
+    flex-grow: 1;
+}
+
+.t-name {
+    font-size: 1.6rem;
+    color: var(--clr-green-nav);
+    margin-bottom: 0.2rem;
+    font-weight: 800;
+}
+
+.t-role {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--clr-orange-primary);
+    margin-bottom: 1.5rem;
+}
+
+.t-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+    margin: 1.5rem 0;
+}
+
+.t-dept {
+    font-size: 1rem;
+    color: var(--clr-orange-primary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+}
+
+.t-card-footer {
+    margin-top: 2rem;
+}
+
+.linkedin-link {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.linkedin-link:hover {
+    transform: scale(1.15) translateY(-2px);
+}
+
+.linkedin-link svg {
+    filter: drop-shadow(0 4px 6px rgba(2, 136, 209, 0.2));
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    .team-hero h1 {
+        font-size: 2.5rem;
+    }
+    .team-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+}

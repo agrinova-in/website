@@ -19,9 +19,9 @@ function logout() {
 function updateNav() {
     const user = getUser();
     const navActions = document.querySelector('.nav-actions');
-    
-    if (!navActions) return; 
-    
+
+    if (!navActions) return;
+
     if (user) {
         // Find existing nav-links or create a user info area
         const userActions = document.createElement('div');
@@ -35,7 +35,7 @@ function updateNav() {
             </div>
             <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.9rem; flex-shrink: 0;" onclick="logout()">Logout</button>
         `;
-        
+
         // Remove the default "Get Started" login button
         const loginBtn = navActions.querySelector('a[href="auth.html"]');
         if (loginBtn) loginBtn.style.display = 'none';
@@ -44,7 +44,7 @@ function updateNav() {
         if (!navActions.querySelector('.user-actions')) {
             navActions.prepend(userActions);
         }
-        
+
         // Show farmer dashboard if they are a farmer
         if (user.role === 'farmer') {
             const panel = document.getElementById('farmer-panel');
@@ -87,10 +87,10 @@ if (loginFormEl) {
         const password = document.getElementById('login-password').value;
         const btn = document.getElementById('login-btn');
         const err = document.getElementById('login-error');
-        
+
         btn.innerText = 'Logging in...';
         btn.disabled = true;
-        
+
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
@@ -98,9 +98,9 @@ if (loginFormEl) {
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
-            
+
             if (!res.ok) throw new Error(data.error || 'Login failed');
-            
+
             localStorage.setItem('agrinova_token', data.token);
             localStorage.setItem('agrinova_user', JSON.stringify(data.user));
             window.location.href = 'marketplace.html';
@@ -127,10 +127,10 @@ if (registerFormEl) {
         };
         const btn = document.getElementById('reg-btn');
         const err = document.getElementById('reg-error');
-        
+
         btn.innerText = 'Registering...';
         btn.disabled = true;
-        
+
         try {
             const res = await fetch(`${API_URL}/auth/register`, {
                 method: 'POST',
@@ -138,9 +138,9 @@ if (registerFormEl) {
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-            
+
             if (!res.ok) throw new Error(data.error || 'Registration failed');
-            
+
             alert('Registration successful! Please login.');
             toggleAuth('login');
         } catch (error) {
@@ -189,11 +189,11 @@ const addProductForm = document.getElementById('add-product-form');
 if (addProductForm) {
     addProductForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const btn = e.target.querySelector('button[type="submit"]');
         btn.innerText = 'Publishing...';
         btn.disabled = true;
-        
+
         const formData = new FormData();
         formData.append('name', document.getElementById('p-name').value);
         formData.append('price', document.getElementById('p-price').value);
@@ -210,9 +210,9 @@ if (addProductForm) {
                 body: formData
             });
             const data = await res.json();
-            
+
             if (!res.ok) throw new Error(data.error || 'Failed to add product');
-            
+
             closeModal();
             fetchProducts();
         } catch (error) {
@@ -254,10 +254,10 @@ async function fetchProducts(query = '') {
     try {
         const res = await fetch(`${API_URL}/products?q=${encodeURIComponent(query)}`);
         const products = await res.json();
-        
+
         if (!res.ok) throw new Error('Failed to load products');
         allProducts = products;
-        
+
         // Only now clear and re-render
         grid.innerHTML = '';
 
@@ -265,7 +265,7 @@ async function fetchProducts(query = '') {
             statusDiv.innerText = query ? 'No crops found matching your search.' : 'No crops available in the market right now.';
             return;
         }
-        
+
         statusDiv.style.display = 'none';
         renderProducts(products);
     } catch (error) {
@@ -276,7 +276,7 @@ async function fetchProducts(query = '') {
 function renderProducts(products) {
     const grid = document.getElementById('products-grid');
     grid.innerHTML = '';
-    
+
     const user = getUser();
 
     products.forEach(p => {
@@ -298,12 +298,21 @@ function renderProducts(products) {
                     <span class="p-price">₹${p.price} <span style="font-size:0.9rem;color:#718096">/ kg</span></span>
                 </div>
                 <div class="p-meta">
-                    <div>📍 ${p.location}</div>
-                    <div>👨‍🌾 ${p.farmer_name}</div>
+                    <div>
+                    <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin-icon lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg> 
+                    </span>
+                    ${p.location}</div>
+                    <div><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg> ${p.farmer_name}</div>
                 </div>
                 
                 ${isOwner ? `
-                    <button class="btn btn-danger" style="width:100%" onclick="deleteProduct(${p.id})">Delete Your Listing</button>
+                    <button class="btn btn-danger" onclick="deleteProduct(${p.id})">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete Your Listing
+                    </button>
                 ` : `
                     <a href="${waUrl}" target="_blank" class="btn btn-whatsapp">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

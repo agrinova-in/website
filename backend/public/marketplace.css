@@ -38,10 +38,14 @@
 }
 
 .auth-brand-logo {
-    font-size: 2rem;
-    font-weight: 800;
-    color: white;
+    display: block;
+    margin-bottom: 2.5rem;
     text-decoration: none;
+}
+
+.auth-brand-logo img {
+    height: 60px;
+    width: auto;
 }
 
 .auth-brand-logo span {
@@ -254,6 +258,7 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--clr-text-muted);
+    margin-top: 3px;
 }
 
 .search-bar input {
@@ -273,12 +278,15 @@
     box-shadow: var(--shadow-md);
 }
 
-/* Forms Grid */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
     background: var(--clr-white);
+}
+
+.form-grid .form-group {
+    margin-bottom: 0;
 }
 
 .full-width {
@@ -304,8 +312,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-box {
@@ -484,13 +497,17 @@
 .btn-danger {
     background-color: #e53e3e;
     color: white;
-    padding: 6px 14px;
-    font-size: 0.85rem;
-    border-radius: 6px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-danger:hover {
     background-color: #c53030;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
 }
 
 .status-msg {
@@ -556,14 +573,21 @@
         max-width: 100%;
     }
 
+    .auth-body {
+        height: auto;
+        overflow: visible;
+    }
+
     /* Auth split-panel → stack on mobile */
     .auth-wrapper {
         flex-direction: column;
+        height: auto;
     }
 
     .auth-brand-panel {
-        padding: 2rem;
+        padding: 2rem 2rem 1.5rem 2rem;
         min-height: auto;
+        flex: none;
     }
 
     .auth-brand-content h2 {
@@ -577,5 +601,7 @@
     .auth-form-panel {
         max-width: 100%;
         padding: 2rem 1.5rem;
+        flex: none;
+        overflow-y: visible;
     }
 }
